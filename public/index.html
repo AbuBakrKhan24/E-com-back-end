@@ -10,9 +10,11 @@
 
 </head>
 <body>
-  <div id="products">
-
+<div class="container">
+  <div id="products" class="row">
   </div>
+</div>
+
  
       <script>
 
@@ -37,14 +39,14 @@ function showItems(products) {
     prodContainer.innerHTML += `
 
 
-    <div class="card" style="width: 18rem;">
-        <img src="${product.thumbnail}" class="card-img-top" alt="...">
+    <div class="card col-lg-3 col-md-4 col-sm-6" style="width: 18rem;">
+        <img src="${product.image1}" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">${product.name}</h5>
-          <p class="card-text">${product.descriptions}</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <span class="card-text">R${product.price}</span>
+          </div>
         </div>
-      </div>
+          
        
 
 
