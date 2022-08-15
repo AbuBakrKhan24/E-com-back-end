@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const middleware = require("../middleware/auth");
 
-// Get all users
+// Get all products
 router.get("/", (req, res) => {
   try {
     con.query("SELECT * FROM products", (err, result) => {
@@ -18,6 +18,24 @@ router.get("/", (req, res) => {
   }
 });
 
+// Single product
+router.get("/products", middleware, (req, res) => {
+  res.send(req.product);
+  try {
+    let sql = "SELECT * FROM products WHERE ?";
+    let product = {
+      product_id: req.product.id,
+    };
+    con.query(sql, product, (err, result) => {
+      if (err) throw err;
+      res.send(result);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// Add product
 router.post("/add_product", (req, res) => {
   try {
     let sql = "INSERT INTO products SET ?";
@@ -27,7 +45,7 @@ router.post("/add_product", (req, res) => {
       price,
       anime_theme,
       descriptions,
-      category,
+      categories,
       stock,
       product_catergory,
       image1,
@@ -41,7 +59,7 @@ router.post("/add_product", (req, res) => {
       price,
       anime_theme,
       descriptions,
-      category,
+      categories,
       create_date,
       stock,
       product_catergory,
@@ -70,6 +88,43 @@ router.delete("/:id", (req, res) => {
       }
     );
     // res.send({ id: req.params.id });
+  }
+});
+
+// Update user
+router.put("/update-user/:id", (req, res) => {
+  try {
+    let sql = "SELECT * FROM users WHERE ?";
+    let user = {
+      user_id: req.params.id,
+    };
+    con.query(sql, user, (err, result) => {
+      if (err) throw err;
+      if (result.length !== 0) {
+        let updateSql = `UPDATE users SET ? WHERE user_id = ${req.params.id}`;
+        let salt = bcrypt.genSaltSync(10);
+        let hash = bcrypt.hashSync(req.body.password, salt);
+        let updateUser = {
+          full_name: req.body.full_name,
+          email: req.body.email,
+          password: hash,
+          user_type: req.body.user_type,
+          phone: req.body.phone,
+          country: req.body.country,
+          billing_address: req.body.billing_address,
+          default_shipping_address: req.body.default_shipping_address,
+        };
+        con.query(updateSql, updateUser, (err, updated) => {
+          if (err) throw err;
+          console.log(updated);
+          res.send("Successfully Updated");
+        });
+      } else {
+        res.send("User not found");
+      }
+    });
+  } catch (error) {
+    console.log(error);
   }
 });
 
