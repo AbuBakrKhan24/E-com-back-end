@@ -18,20 +18,37 @@ router.get("/", (req, res) => {
   }
 });
 
-// Single product
-router.get("/products", middleware, (req, res) => {
-  res.send(req.product);
+// Single product|| with middleware
+// router.get("/products", middleware, (req, res) => {
+//   res.send(req.product);
+//   try {
+//     let sql = "SELECT * FROM products WHERE ?";
+//     let product = {
+//       product_id: req.product.id,
+//     };
+//     con.query(sql, product, (err, result) => {
+//       if (err) throw err;
+//       res.send(result);
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
+// Single Product
+router.get("/:id", (req, res) => {
   try {
-    let sql = "SELECT * FROM products WHERE ?";
-    let product = {
-      product_id: req.product.id,
-    };
-    con.query(sql, product, (err, result) => {
-      if (err) throw err;
-      res.send(result);
-    });
+    con.query(
+      `SELECT * FROM products WHERE id = ${req.params.id}`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+    // res.send({ id: req.params.id });
   } catch (error) {
     console.log(error);
+    res.status(400).send(error);
   }
 });
 
@@ -76,6 +93,8 @@ router.post("/add_product", (req, res) => {
     console.log(error);
   }
 });
+
+
 
 // Delete one product
 router.delete("/:id", (req, res) => {
