@@ -94,8 +94,6 @@ router.post("/add_product", (req, res) => {
   }
 });
 
-
-
 // Delete one product
 router.delete("/:id", (req, res) => {
   {

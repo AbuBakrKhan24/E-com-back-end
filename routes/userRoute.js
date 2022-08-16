@@ -136,7 +136,7 @@ router.post("/login", (req, res) => {
     con.query(sql, user, async (err, result) => {
       if (err) throw err;
       if (result.length === 0) {
-        res.send("Email not found please register");
+        res.send("email not found please register");
       } else {
         const isMatch = await bcrypt.compare(
           req.body.password,
